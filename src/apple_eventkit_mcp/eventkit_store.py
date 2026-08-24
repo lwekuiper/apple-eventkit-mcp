@@ -14,9 +14,6 @@ from .permissions import (
     request_all_permissions,
 )
 
-# Attribution added to items created via MCP
-CREATED_BY_NOTE = "Created by Claude Desktop"
-
 
 class EventKitStore:
     """Thread-safe wrapper for EKEventStore operations."""
@@ -144,9 +141,7 @@ class EventKitStore:
             if url:
                 event.setURL_(NSURL.URLWithString_(url))
 
-            # Handle notes with tags, prepending attribution
-            notes_with_attribution = f"{CREATED_BY_NOTE}\n\n{notes}" if notes else CREATED_BY_NOTE
-            final_notes = merge_notes_with_tags(notes_with_attribution, tags)
+            final_notes = merge_notes_with_tags(notes, tags)
             event.setNotes_(final_notes)
 
             # Save
@@ -416,9 +411,7 @@ class EventKitStore:
                 priority_map = {"high": 1, "medium": 5, "low": 9, "none": 0}
                 reminder.setPriority_(priority_map.get(priority.lower(), 0))
 
-            # Handle notes with tags, prepending attribution
-            notes_with_attribution = f"{CREATED_BY_NOTE}\n\n{notes}" if notes else CREATED_BY_NOTE
-            final_notes = merge_notes_with_tags(notes_with_attribution, tags)
+            final_notes = merge_notes_with_tags(notes, tags)
             reminder.setNotes_(final_notes)
 
             # Save
