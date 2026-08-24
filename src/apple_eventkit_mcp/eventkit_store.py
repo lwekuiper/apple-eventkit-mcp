@@ -597,6 +597,42 @@ class EventKitStore:
             "allows_modifications": calendar.allowsContentModifications(),
         }
 
+    def _recurrence_to_dict(self, item: EventKit.EKCalendarItem) -> Optional[dict]:
+        """Summarize an item's first recurrence rule, or None if it does not repeat.
+
+        EventKit allows several rules per item; only the first is reported, since the
+        Reminders and Calendar UIs only ever create one.
+        """
+        if not item.hasRecurrenceRules():
+            return None
+
+        rules = item.recurrenceRules()
+        if not rules:
+            return None
+
+        rule = rules[0]
+        frequency = {
+            EventKit.EKRecurrenceFrequencyDaily: "daily",
+            EventKit.EKRecurrenceFrequencyWeekly: "weekly",
+            EventKit.EKRecurrenceFrequencyMonthly: "monthly",
+            EventKit.EKRecurrenceFrequencyYearly: "yearly",
+        }.get(rule.frequency())
+
+        end_date = None
+        occurrence_count = None
+        end = rule.recurrenceEnd()
+        if end is not None:
+            end_date = self._nsdate_to_iso(end.endDate())
+            # A count-limited rule reports 0 here, which is not a real occurrence count.
+            occurrence_count = end.occurrenceCount() or None
+
+        return {
+            "frequency": frequency,
+            "interval": rule.interval(),
+            "end_date": end_date,
+            "occurrence_count": occurrence_count,
+        }
+
     def _event_to_dict(self, event: EventKit.EKEvent) -> dict:
         """Convert EKEvent to dictionary."""
         notes = event.notes() or ""
@@ -615,6 +651,7 @@ class EventKitStore:
             "is_all_day": event.isAllDay(),
             "url": str(event.URL()) if event.URL() else None,
             "has_recurrence": event.hasRecurrenceRules(),
+            "recurrence": self._recurrence_to_dict(event),
         }
 
     def _reminder_to_dict(self, reminder: EventKit.EKReminder) -> dict:
@@ -644,6 +681,8 @@ class EventKitStore:
             "priority": priority,
             "completed": reminder.isCompleted(),
             "completion_date": self._nsdate_to_iso(reminder.completionDate()),
+            "has_recurrence": reminder.hasRecurrenceRules(),
+            "recurrence": self._recurrence_to_dict(reminder),
         }
 
     def _find_calendar_unlocked(self, name: str) -> Optional[EventKit.EKCalendar]:
