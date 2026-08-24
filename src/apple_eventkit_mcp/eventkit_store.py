@@ -602,6 +602,15 @@ class EventKitStore:
 
         EventKit allows several rules per item; only the first is reported, since the
         Reminders and Calendar UIs only ever create one.
+
+        CAVEAT on daily rules: Reminders.app can store sub-daily repeats ("Every 12
+        hours") that EKRecurrenceFrequency cannot represent -- its smallest unit is
+        daily. EventKit then hands back a LOSSY substitute that keeps the interval and
+        silently swaps the unit, so a 12-hour repeat arrives here indistinguishable
+        from a 12-day one (verified 2026-08-24 against a reminder the UI showed as
+        "Every 12 hours" while the RRULE read FREQ=DAILY;INTERVAL=12). Any daily rule
+        is therefore marked unit_uncertain so callers do not state a cadence the API
+        cannot actually confirm. Weekly/monthly/yearly have no sub-unit ambiguity.
         """
         if not item.hasRecurrenceRules():
             return None
@@ -626,12 +635,22 @@ class EventKitStore:
             # A count-limited rule reports 0 here, which is not a real occurrence count.
             occurrence_count = end.occurrenceCount() or None
 
-        return {
+        result = {
             "frequency": frequency,
             "interval": rule.interval(),
             "end_date": end_date,
             "occurrence_count": occurrence_count,
         }
+
+        if frequency == "daily":
+            result["unit_uncertain"] = True
+            result["note"] = (
+                "EventKit cannot represent sub-daily repeats: this may actually be "
+                "every %d HOURS, not days. Check Reminders.app before stating the "
+                "cadence." % rule.interval()
+            )
+
+        return result
 
     def _event_to_dict(self, event: EventKit.EKEvent) -> dict:
         """Convert EKEvent to dictionary."""
