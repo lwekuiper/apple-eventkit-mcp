@@ -90,10 +90,7 @@ def request_permissions():
         print("\nRequesting Calendar access...")
         print(">>> A system dialog should appear. Please click 'OK' to grant access.")
         pending["count"] += 1
-        store.requestAccessToEntityType_completion_(
-            EventKit.EKEntityTypeEvent,
-            calendar_callback
-        )
+        store.requestFullAccessToEventsWithCompletion_(calendar_callback)
     elif cal_status == 3:  # Authorized
         print("\nCalendar: Already authorized")
         results["calendar"] = True
@@ -107,10 +104,7 @@ def request_permissions():
         print("\nRequesting Reminders access...")
         print(">>> A system dialog should appear. Please click 'OK' to grant access.")
         pending["count"] += 1
-        store.requestAccessToEntityType_completion_(
-            EventKit.EKEntityTypeReminder,
-            reminders_callback
-        )
+        store.requestFullAccessToRemindersWithCompletion_(reminders_callback)
     elif rem_status == 3:  # Authorized
         print("\nReminders: Already authorized")
         results["reminders"] = True

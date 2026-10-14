@@ -119,10 +119,7 @@ def request_calendar_access(
     def default_callback(granted: bool, error: object) -> None:
         pass
 
-    store.requestAccessToEntityType_completion_(
-        EventKit.EKEntityTypeEvent,
-        callback or default_callback
-    )
+    store.requestFullAccessToEventsWithCompletion_(callback or default_callback)
 
 
 def request_reminders_access(
@@ -133,10 +130,7 @@ def request_reminders_access(
     def default_callback(granted: bool, error: object) -> None:
         pass
 
-    store.requestAccessToEntityType_completion_(
-        EventKit.EKEntityTypeReminder,
-        callback or default_callback
-    )
+    store.requestFullAccessToRemindersWithCompletion_(callback or default_callback)
 
 
 def request_all_permissions(store: EventKit.EKEventStore) -> None:
