@@ -26,6 +26,8 @@ Since Apple's EventKit doesn't support native tags, this server implements a has
 
 ## Installation
 
+> Claude Code desktop app sessions cannot get EventKit access directly; see [macos-host/README.md](macos-host/README.md).
+
 ### Prerequisites
 - macOS 10.15 or later
 - Python 3.10 or later

@@ -72,9 +72,8 @@ def get_permission_instructions(calendar: dict, reminders: dict) -> str:
     if not calendar["authorized"]:
         if calendar["status"] == "denied":
             instructions.append(
-                "Calendar access denied. Please enable in: "
-                "System Settings > Privacy & Security > Calendar > "
-                "Enable access for Terminal or Claude Desktop."
+                "Calendar access denied. Please enable Apple EventKit MCP in: "
+                "System Settings > Privacy & Security > Calendars."
             )
         elif calendar["status"] == "restricted":
             instructions.append(
@@ -83,15 +82,14 @@ def get_permission_instructions(calendar: dict, reminders: dict) -> str:
         else:
             instructions.append(
                 "Calendar access not yet requested. "
-                "Run the setup_permissions.py script from Terminal."
+                "Run the setup command in macos-host/README.md (install step 3), which requests access for the Apple EventKit MCP host app."
             )
 
     if not reminders["authorized"]:
         if reminders["status"] == "denied":
             instructions.append(
-                "Reminders access denied. Please enable in: "
-                "System Settings > Privacy & Security > Reminders > "
-                "Enable access for Terminal or Claude Desktop."
+                "Reminders access denied. Please enable Apple EventKit MCP in: "
+                "System Settings > Privacy & Security > Reminders."
             )
         elif reminders["status"] == "restricted":
             instructions.append(
@@ -100,7 +98,7 @@ def get_permission_instructions(calendar: dict, reminders: dict) -> str:
         else:
             instructions.append(
                 "Reminders access not yet requested. "
-                "Run the setup_permissions.py script from Terminal."
+                "Run the setup command in macos-host/README.md (install step 3), which requests access for the Apple EventKit MCP host app."
             )
 
     return "\n".join(instructions)
@@ -110,12 +108,7 @@ def request_calendar_access(
     store: EventKit.EKEventStore,
     callback: Callable[[bool, object], None] | None = None
 ) -> None:
-    """Request calendar access permission.
-
-    Note: On macOS, this will only show a dialog if run from a context
-    that can present UI (e.g., Terminal). When run as a subprocess of
-    Claude Desktop, you may need to grant permissions manually.
-    """
+    """Request full calendar access permission."""
     def default_callback(granted: bool, error: object) -> None:
         pass
 
@@ -162,11 +155,13 @@ class PermissionError(Exception):
         if self.status == "denied":
             return (
                 f"Please enable access in System Settings > Privacy & Security > "
-                f"{self.entity_type}. Add Claude Desktop or Terminal to allowed apps."
+                f"{self.entity_type} for Apple EventKit MCP."
             )
         elif self.status == "restricted":
             return "Access is restricted by device policy."
-        return "Please run the setup_permissions.py script to request permissions."
+        return (
+            "Run the setup command in macos-host/README.md (install step 3), which requests access for the Apple EventKit MCP host app."
+        )
 
 
 def require_calendar_permission() -> None:

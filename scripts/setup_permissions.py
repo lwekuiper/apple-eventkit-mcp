@@ -1,21 +1,14 @@
 #!/usr/bin/env python3
 """
-Setup script to request Calendar and Reminders permissions on macOS.
+Request Calendar and Reminders access for the Apple EventKit MCP host app.
 
-Run this script from Terminal ONCE to trigger the macOS permission dialogs.
-This is necessary because when the MCP server runs as a subprocess of
-Claude Desktop, it may not be able to trigger the permission dialogs.
+Run it through the host so macOS attributes the request to the host:
 
-Usage:
-    python scripts/setup_permissions.py
+    open -g "$HOME/Applications/Apple EventKit Host.app" --args \\
+        /opt/homebrew/bin/uv --directory /Users/laurens/.scripts/apple-eventkit-mcp \\
+        run python /Users/laurens/.scripts/apple-eventkit-mcp/scripts/setup_permissions.py
 
-After running, you should see permission dialogs for Calendar and Reminders.
-Grant access to both, then restart Claude Desktop.
-
-If dialogs don't appear, you may need to manually grant permissions:
-1. Open System Settings > Privacy & Security > Calendar
-2. Add Terminal (or the app running this script) to the allowed list
-3. Repeat for Reminders
+Run directly from a terminal, it requests access for that terminal app instead.
 """
 
 import sys
@@ -96,7 +89,7 @@ def request_permissions():
         results["calendar"] = True
     else:
         print(f"\nCalendar: {get_status_name(cal_status)}")
-        print("  To grant access, go to: System Settings > Privacy & Security > Calendar")
+        print("  Enable Apple EventKit MCP in: System Settings > Privacy & Security > Calendars")
         results["calendar"] = False
 
     # Request Reminders permission if needed
@@ -110,7 +103,7 @@ def request_permissions():
         results["reminders"] = True
     else:
         print(f"\nReminders: {get_status_name(rem_status)}")
-        print("  To grant access, go to: System Settings > Privacy & Security > Reminders")
+        print("  Enable Apple EventKit MCP in: System Settings > Privacy & Security > Reminders")
         results["reminders"] = False
 
     # Wait for callbacks if we requested any
@@ -145,20 +138,10 @@ def main():
 
     if final_cal == 3 and final_rem == 3:
         print("\n✓ SUCCESS: All permissions granted!")
-        print("\nYou can now use the Apple EventKit MCP server with Claude Desktop.")
-        print("Restart Claude Desktop if it's currently running.")
     else:
         print("\n⚠ Some permissions are missing.")
-        print("\nTo manually grant permissions:")
-        print("1. Open System Settings")
-        print("2. Go to Privacy & Security > Calendar")
-        print("3. Enable access for Terminal (or your terminal app)")
-        print("4. Go to Privacy & Security > Reminders")
-        print("5. Enable access for Terminal (or your terminal app)")
-        print("\nFor Claude Desktop, you may also need to grant access to:")
-        print("  - Claude Desktop app itself")
-        print("  - Python interpreter used by the MCP server")
-        print("\nSee the README for more detailed instructions.")
+        print("\nEnable Apple EventKit MCP in System Settings > Privacy & Security >")
+        print("Calendars and Reminders, or remove its entry there and run this again.")
 
 
 if __name__ == "__main__":

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>com.lwekuiper.apple-eventkit-host</string>
+    <key>ProgramArguments</key>
+    <array>
+        <string>/Users/laurens/Applications/Apple EventKit Host.app/Contents/MacOS/AppleEventKitHost</string>
+        <string>/opt/homebrew/bin/uv</string>
+        <string>--directory</string>
+        <string>/Users/laurens/.scripts/apple-eventkit-mcp</string>
+        <string>run</string>
+        <string>python</string>
+        <string>-m</string>
+        <string>apple_eventkit_mcp.server</string>
+    </array>
+    <key>inetdCompatibility</key>
+    <dict>
+        <key>Wait</key>
+        <false/>
+    </dict>
+    <key>Sockets</key>
+    <dict>
+        <key>Listeners</key>
+        <dict>
+            <key>SockPathName</key>
+            <string>/Users/laurens/Library/Caches/apple-eventkit-mcp.sock</string>
+            <key>SockPathMode</key>
+            <integer>384</integer>
+            <key>SockFamily</key>
+            <string>Unix</string>
+        </dict>
+    </dict>
+    <key>StandardErrorPath</key>
+    <string>/Users/laurens/Library/Logs/apple-eventkit-mcp.log</string>
+</dict>
+</plist>
