@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Request Calendar and Reminders access for the Apple EventKit MCP host app.
+Request Calendar and Reminders access for the Apple EventKit Host app.
 
 Run it through the host so macOS attributes the request to the host:
 
@@ -89,7 +89,7 @@ def request_permissions():
         results["calendar"] = True
     else:
         print(f"\nCalendar: {get_status_name(cal_status)}")
-        print("  Enable Apple EventKit MCP in: System Settings > Privacy & Security > Calendars")
+        print("  Enable Apple EventKit Host in: System Settings > Privacy & Security > Calendars")
         results["calendar"] = False
 
     # Request Reminders permission if needed
@@ -103,7 +103,7 @@ def request_permissions():
         results["reminders"] = True
     else:
         print(f"\nReminders: {get_status_name(rem_status)}")
-        print("  Enable Apple EventKit MCP in: System Settings > Privacy & Security > Reminders")
+        print("  Enable Apple EventKit Host in: System Settings > Privacy & Security > Reminders")
         results["reminders"] = False
 
     # Wait for callbacks if we requested any
@@ -140,7 +140,7 @@ def main():
         print("\n✓ SUCCESS: All permissions granted!")
     else:
         print("\n⚠ Some permissions are missing.")
-        print("\nEnable Apple EventKit MCP in System Settings > Privacy & Security >")
+        print("\nEnable Apple EventKit Host in System Settings > Privacy & Security >")
         print("Calendars and Reminders, or remove its entry there and run this again.")
 
 

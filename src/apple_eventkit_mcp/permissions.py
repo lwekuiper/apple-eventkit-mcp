@@ -72,7 +72,7 @@ def get_permission_instructions(calendar: dict, reminders: dict) -> str:
     if not calendar["authorized"]:
         if calendar["status"] == "denied":
             instructions.append(
-                "Calendar access denied. Please enable Apple EventKit MCP in: "
+                "Calendar access denied. Please enable Apple EventKit Host in: "
                 "System Settings > Privacy & Security > Calendars."
             )
         elif calendar["status"] == "restricted":
@@ -82,13 +82,13 @@ def get_permission_instructions(calendar: dict, reminders: dict) -> str:
         else:
             instructions.append(
                 "Calendar access not yet requested. "
-                "Run the setup command in macos-host/README.md (install step 3), which requests access for the Apple EventKit MCP host app."
+                "Run the setup command in macos-host/README.md (install step 3), which requests access for the Apple EventKit Host app."
             )
 
     if not reminders["authorized"]:
         if reminders["status"] == "denied":
             instructions.append(
-                "Reminders access denied. Please enable Apple EventKit MCP in: "
+                "Reminders access denied. Please enable Apple EventKit Host in: "
                 "System Settings > Privacy & Security > Reminders."
             )
         elif reminders["status"] == "restricted":
@@ -98,7 +98,7 @@ def get_permission_instructions(calendar: dict, reminders: dict) -> str:
         else:
             instructions.append(
                 "Reminders access not yet requested. "
-                "Run the setup command in macos-host/README.md (install step 3), which requests access for the Apple EventKit MCP host app."
+                "Run the setup command in macos-host/README.md (install step 3), which requests access for the Apple EventKit Host app."
             )
 
     return "\n".join(instructions)
@@ -155,12 +155,12 @@ class PermissionError(Exception):
         if self.status == "denied":
             return (
                 f"Please enable access in System Settings > Privacy & Security > "
-                f"{self.entity_type} for Apple EventKit MCP."
+                f"{self.entity_type} for Apple EventKit Host."
             )
         elif self.status == "restricted":
             return "Access is restricted by device policy."
         return (
-            "Run the setup command in macos-host/README.md (install step 3), which requests access for the Apple EventKit MCP host app."
+            "Run the setup command in macos-host/README.md (install step 3), which requests access for the Apple EventKit Host app."
         )
 
 

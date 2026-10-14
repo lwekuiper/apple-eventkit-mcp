@@ -17,7 +17,7 @@ Claude desktop app sessions spawn MCP servers under the Claude Code helper app, 
    launchctl bootstrap gui/$(id -u) ~/Library/LaunchAgents/com.lwekuiper.apple-eventkit-host.plist
    ```
 
-3. Grant access. Click Allow on both prompts, which name Apple EventKit MCP:
+3. Grant access. Click Allow on both prompts:
 
    ```bash
    open -g "$HOME/Applications/Apple EventKit Host.app" --args /opt/homebrew/bin/uv --directory /Users/laurens/.scripts/apple-eventkit-mcp run python /Users/laurens/.scripts/apple-eventkit-mcp/scripts/setup_permissions.py
@@ -31,7 +31,7 @@ Claude desktop app sessions spawn MCP servers under the Claude Code helper app, 
 
 ## Rebuilding
 
-The bundle is ad-hoc signed, so macOS ties the grant to this exact build. After any rebuild, repeat step 3; remove the stale Apple EventKit MCP entry under System Settings > Privacy & Security > Reminders and Calendars if it lingers. Edits to the Python server need no rebuild and keep the grant. The LaunchAgent needs no reload after a rebuild: launchd starts the binary fresh per connection.
+The bundle is ad-hoc signed, so macOS ties the grant to this exact build. After any rebuild, repeat step 3; remove the stale Apple EventKit Host entry under System Settings > Privacy & Security > Reminders and Calendars if it lingers. Edits to the Python server need no rebuild and keep the grant. The LaunchAgent needs no reload after a rebuild: launchd starts the binary fresh per connection.
 
 ## Troubleshooting
 
